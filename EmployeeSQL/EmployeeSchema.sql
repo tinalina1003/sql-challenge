@@ -1,72 +1,69 @@
 ﻿-- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
 -- NOTE! If you have used non-SQL datatypes in your design, you will have to change these here.
 
+--THE ORDER OF IMPORTING MATTERS... esp when referencing...
+--IMPORT DEPARTMENTS, EMPLOYEES, TITLES FIRST BEFORE IMPORTING THE DEPARTMENT EMP/MANAGER INFO.. OR IT'LL BUG OUT
+--THIS IS BECAUSE IT'S TRYING TO REFERENCE SOME COLUMNS THAT DON'T EXIST YET
 
-CREATE TABLE "Departments" (
-    "Department_No" VARCHAR   NOT NULL,
-    "Department_Name" VARCHAR   NOT NULL,
-    CONSTRAINT "pk_Departments" PRIMARY KEY (
-        "Department_No"
+CREATE TABLE "departments" (
+    "dept_no" VARCHAR   NOT NULL,
+    "dept_name" VARCHAR   NOT NULL,
+    CONSTRAINT "pk_departments" PRIMARY KEY (
+        "dept_no"
      )
 );
 
-CREATE TABLE "Department_Employees" (
-    "Employee_No" INT   NOT NULL,
-    "Department_No" VARCHAR   NOT NULL,
-    CONSTRAINT "pk_Department_Employees" PRIMARY KEY (
-        "Employee_No"
+CREATE TABLE "dept_emp" (
+    "emp_no" INT   NOT NULL,
+    "dept_no" VARCHAR   NOT NULL,
+	PRIMARY KEY (emp_no, dept_no)
+);
+
+CREATE TABLE "dept_manager" (
+    "dept_no" VARCHAR   NOT NULL,
+    "emp_no" INT   NOT NULL,
+	PRIMARY KEY (dept_no, emp_no)
+);
+
+CREATE TABLE "employees" (
+    "emp_no" INT   NOT NULL,
+    "emp_title" VARCHAR   NOT NULL,
+    "birth_date" VARCHAR   NOT NULL,
+    "first_name" VARCHAR   NOT NULL,
+    "last_name" VARCHAR   NOT NULL,
+    "sex" VARCHAR   NOT NULL,
+    "hire_date" VARCHAR   NOT NULL,
+    CONSTRAINT "pk_employees" PRIMARY KEY (
+        "emp_no"
      )
 );
 
-CREATE TABLE "Department_Managers" (
-    "Department_No" VARCHAR   NOT NULL,
-    "Employee_No" INT   NOT NULL
+CREATE TABLE "salaries" (
+    "emp_no" INT   NOT NULL,
+    "salary" INT   NOT NULL,
+	PRIMARY KEY (emp_no, salary)
 );
 
-CREATE TABLE "Employees" (
-    "Employee_No" INT   NOT NULL,
-    "Employee_Title" VARCHAR   NOT NULL,
-    "Birth_Date" VARCHAR   NOT NULL,
-    "First_Name" VARCHAR   NOT NULL,
-    "Last_Name" VARCHAR   NOT NULL,
-    "Sex" VARCHAR   NOT NULL,
-    "Hire_Date" VARCHAR   NOT NULL,
-    CONSTRAINT "pk_Employees" PRIMARY KEY (
-        "Employee_No"
+CREATE TABLE "titles" (
+    "emp_title" VARCHAR   NOT NULL,
+    "title" VARCHAR   NOT NULL,
+    CONSTRAINT "pk_titles" PRIMARY KEY (
+        "emp_title"
      )
 );
 
-CREATE TABLE "Salaries" (
-    "Employee_No" INT   NOT NULL,
-    "Salary" INT   NOT NULL,
-    CONSTRAINT "pk_Salaries" PRIMARY KEY (
-        "Employee_No"
-     )
-);
+ALTER TABLE "dept_emp" ADD CONSTRAINT "fk_dept_emp_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
 
-CREATE TABLE "Titles" (
-    "Title_id" VARCHAR   NOT NULL,
-    "Employee_Title" VARCHAR   NOT NULL,
-    CONSTRAINT "pk_Titles" PRIMARY KEY (
-        "Title_id"
-     )
-);
+ALTER TABLE "dept_emp" ADD CONSTRAINT "fk_dept_emp_dept_no" FOREIGN KEY("dept_no")
+REFERENCES "departments" ("dept_no");
 
-ALTER TABLE "Departments" ADD CONSTRAINT "fk_Departments_Department_No" FOREIGN KEY("Department_No")
-REFERENCES "Department_Employees" ("Department_No");
+ALTER TABLE "dept_manager" ADD CONSTRAINT "fk_dept_manager_dept_no" FOREIGN KEY("dept_no")
+REFERENCES "departments" ("dept_no");
 
-ALTER TABLE "Department_Employees" ADD CONSTRAINT "fk_Department_Employees_Employee_No" FOREIGN KEY("Employee_No")
-REFERENCES "Salaries" ("Employee_No");
+ALTER TABLE "dept_manager" ADD CONSTRAINT "fk_dept_manager_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
 
-ALTER TABLE "Department_Managers" ADD CONSTRAINT "fk_Department_Managers_Department_No" FOREIGN KEY("Department_No")
-REFERENCES "Departments" ("Department_No");
-
-ALTER TABLE "Department_Managers" ADD CONSTRAINT "fk_Department_Managers_Employee_No" FOREIGN KEY("Employee_No")
-REFERENCES "Employees" ("Employee_No");
-
-ALTER TABLE "Employees" ADD CONSTRAINT "fk_Employees_Employee_Title" FOREIGN KEY("Employee_Title")
-REFERENCES "Titles" ("Employee_Title");
-
-ALTER TABLE "Salaries" ADD CONSTRAINT "fk_Salaries_Employee_No" FOREIGN KEY("Employee_No")
-REFERENCES "Employees" ("Employee_No");
+ALTER TABLE "salaries" ADD CONSTRAINT "fk_salaries_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
 

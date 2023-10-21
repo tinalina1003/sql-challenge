@@ -1,4 +1,4 @@
-﻿-- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
+-- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
 -- NOTE! If you have used non-SQL datatypes in your design, you will have to change these here.
 
 --THE ORDER OF IMPORTING MATTERS... esp when referencing...
@@ -6,8 +6,8 @@
 --THIS IS BECAUSE IT'S TRYING TO REFERENCE SOME COLUMNS THAT DON'T EXIST YET
 
 CREATE TABLE "departments" (
-    "dept_no" VARCHAR   NOT NULL,
-    "dept_name" VARCHAR   NOT NULL,
+    "dept_no" VARCHAR(255)  NOT NULL,
+    "dept_name" VARCHAR(255)   NOT NULL,
     CONSTRAINT "pk_departments" PRIMARY KEY (
         "dept_no"
      )
@@ -15,24 +15,24 @@ CREATE TABLE "departments" (
 
 CREATE TABLE "dept_emp" (
     "emp_no" INT   NOT NULL,
-    "dept_no" VARCHAR   NOT NULL,
+    "dept_no" VARCHAR(255)   NOT NULL,
 	PRIMARY KEY (emp_no, dept_no)
 );
 
 CREATE TABLE "dept_manager" (
-    "dept_no" VARCHAR   NOT NULL,
+    "dept_no" VARCHAR(255)   NOT NULL,
     "emp_no" INT   NOT NULL,
 	PRIMARY KEY (dept_no, emp_no)
 );
 
 CREATE TABLE "employees" (
     "emp_no" INT   NOT NULL,
-    "emp_title" VARCHAR   NOT NULL,
-    "birth_date" VARCHAR   NOT NULL,
-    "first_name" VARCHAR   NOT NULL,
-    "last_name" VARCHAR   NOT NULL,
-    "sex" VARCHAR   NOT NULL,
-    "hire_date" VARCHAR   NOT NULL,
+    "emp_title" VARCHAR(255)   NOT NULL,
+    "birth_date" VARCHAR(255)   NOT NULL,
+    "first_name" VARCHAR(255)   NOT NULL,
+    "last_name" VARCHAR(255)   NOT NULL,
+    "sex" VARCHAR(255)   NOT NULL,
+    "hire_date" VARCHAR(255)   NOT NULL,
     CONSTRAINT "pk_employees" PRIMARY KEY (
         "emp_no"
      )
@@ -45,8 +45,8 @@ CREATE TABLE "salaries" (
 );
 
 CREATE TABLE "titles" (
-    "emp_title" VARCHAR   NOT NULL,
-    "title" VARCHAR   NOT NULL,
+    "emp_title" VARCHAR(255)   NOT NULL,
+    "title" VARCHAR(255)   NOT NULL,
     CONSTRAINT "pk_titles" PRIMARY KEY (
         "emp_title"
      )
@@ -67,3 +67,5 @@ REFERENCES "employees" ("emp_no");
 ALTER TABLE "salaries" ADD CONSTRAINT "fk_salaries_emp_no" FOREIGN KEY("emp_no")
 REFERENCES "employees" ("emp_no");
 
+ALTER TABLE "titles" ADD CONSTRAINT "fk_employees_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
